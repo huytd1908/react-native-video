@@ -927,7 +927,14 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
         var height: Float? = nil
         var orientation = "undefined"
         
-        if _playerItem.asset.tracks(withMediaType: AVMediaType.video).count > 0 {
+         if _playerItem.presentationSize.height != 0.0 {
+            width = Float(_playerItem.presentationSize.width)
+            height = Float(_playerItem.presentationSize.height)
+            orientation = _playerItem.presentationSize.width > _playerItem.presentationSize.height ? "landscape" : "portrait"
+        } else if _playerItem.asset.tracks(withMediaType: AVMediaType.video).count > 0 {
+            width = Float(_playerItem.presentationSize.width)
+            height = Float(_playerItem.presentationSize.height)
+            orientation = _playerItem.presentationSize.width > _playerItem.presentationSize.height ? "landscape" : "portrait"
             let videoTrack = _playerItem.asset.tracks(withMediaType: .video)[0]
             width = Float(videoTrack.naturalSize.width)
             height = Float(videoTrack.naturalSize.height)
@@ -941,11 +948,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
             } else {
                 orientation = "portrait"
             }
-        } else if _playerItem.presentationSize.height != 0.0 {
-            width = Float(_playerItem.presentationSize.width)
-            height = Float(_playerItem.presentationSize.height)
-            orientation = _playerItem.presentationSize.width > _playerItem.presentationSize.height ? "landscape" : "portrait"
-        }
+        } 
         
         if _pendingSeek {
             setCurrentTime(_pendingSeekTime)
